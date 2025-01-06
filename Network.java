@@ -92,17 +92,14 @@ public class Network {
     public String mostPopularUser() {
         int maxFollows = 0;
         String theName = "";
-        // Iterate over all users to check who follows whom
         for (int i = 0; i < users.length; i++) {
-            if (users[i] != null) {  // Check if the current user is not null
-                int follows = 0;  // Initialize follows count for the current user
-                // Check each other user in the array
+            if (users[i] != null) {  
+                int follows = 0; 
                 for (int j = 0; j < users.length; j++) {
                     if (users[j] != null && users[j].follows(users[i].getName())) {  // Ensure both users[j] is not null and safely call follows
                         follows++;
                     }
                 }
-                // Update the most popular user if the current one has more followers
                 if (follows > maxFollows) {
                     maxFollows = follows;
                     theName = users[i].getName();
@@ -130,15 +127,16 @@ public class Network {
 
     // Returns a textual description of all the users in this network, and who they follow.
     public String toString() {
-        String ans = "";
+        String ans = "Network:\n";
         for (int i = 0; i < users.length; i++) {
             if (users[i] != null) {  // Only process non-null users
-                ans += users[i].toString();  // Concatenate the user's description
+                ans += users[i].toString() + "\n";  // Concatenate the user's description
             }
-            // No else part needed because we don't want to append anything if the user is null
         }
         return ans;
     }
+
+
     
     
 }
