@@ -68,7 +68,7 @@ public class Network {
         User user1 = getUser(name1);  // Find the user in the network
         User user2 = getUser(name2);  // Find the followee in the network
     
-        if (user1 == null || user2 == null) {
+        if (user1 == null || user2 == null || name1==name2) {
             return false;  // Return false if either user doesn't exist
         }
     
@@ -118,7 +118,7 @@ public class Network {
             }
         }
     
-        return mostPopular != null ? mostPopular : "";  // Return empty string if no users are popular
+        return mostPopular != null ? mostPopular : null;  
     }
     
     
