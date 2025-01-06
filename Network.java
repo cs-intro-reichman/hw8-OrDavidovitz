@@ -29,15 +29,17 @@ public class Network {
      *  If there is no such user, returns null.
      *  Notice that the method receives a String, and returns a User object. */
     public User getUser(String name) {
-        for (int i=0; i<userCount;i++)
-        {
-            if (users[i].getName().equals(name))
-            {
+        if (name == null) {
+            return null;  // Return null if the input name is null
+        }
+        for (int i = 0; i < userCount; i++) {
+            if (users[i] != null && users[i].getName().equalsIgnoreCase(name)) {  // Case-insensitive comparison
                 return users[i];
             }
         }
-        return null;
+        return null;  // Return null if no user with the given name is found
     }
+    
 
     /** Adds a new user with the given name to this network.
     *  If ths network is full, does nothing and returns false;
@@ -63,10 +65,16 @@ public class Network {
      *  If any of the two names is not a user in this network,
      *  or if the "follows" addition failed for some reason, returns false. */
     public boolean addFollowee(String name1, String name2) {
-        if (getUser(name1)==null||getUser(name2)==null)
-        return false;
-        return getUser(name1).addFollowee(name2);
+        User user1 = getUser(name1);  // Find the user in the network
+        User user2 = getUser(name2);  // Find the followee in the network
+    
+        if (user1 == null || user2 == null) {
+            return false;  // Return false if either user doesn't exist
+        }
+    
+        return user1.addFollowee(name2);  // Add followee to user1
     }
+    
     
     /** For the user with the given name, recommends another user to follow. The recommended user is
      *  the user that has the maximal mutual number of followees as the user with the given name. */
@@ -87,27 +95,32 @@ public class Network {
         return thename;
     }
 
-    /** Computes and returns the name of the most popular user in this network: 
-     *  The user who appears the most in the follow lists of all the users. */
     public String mostPopularUser() {
         int maxFollows = 0;
-        String theName = "";
+        String mostPopular = null;
+    
         for (int i = 0; i < users.length; i++) {
             if (users[i] != null) {  
-                int follows = 0; 
+                int followsCount = 0;
+    
+                // Count how many users follow this user
                 for (int j = 0; j < users.length; j++) {
-                    if (users[j] != null && users[j].follows(users[i].getName())) {  // Ensure both users[j] is not null and safely call follows
-                        follows++;
+                    if (users[j] != null && users[j].follows(users[i].getName())) {
+                        followsCount++;
                     }
                 }
-                if (follows > maxFollows) {
-                    maxFollows = follows;
-                    theName = users[i].getName();
+    
+                // Update most popular user if this user has more followers
+                if (followsCount > maxFollows) {
+                    maxFollows = followsCount;
+                    mostPopular = users[i].getName();
                 }
             }
         }
-        return theName;
+    
+        return mostPopular != null ? mostPopular : "";  // Return empty string if no users are popular
     }
+    
     
     
 
@@ -127,10 +140,10 @@ public class Network {
 
     // Returns a textual description of all the users in this network, and who they follow.
     public String toString() {
-        String ans = "Network:\n";
+        String ans = "Network:";
         for (int i = 0; i < users.length; i++) {
-            if (users[i] != null) {  // Only process non-null users
-                ans += users[i].toString() + "\n";  // Concatenate the user's description
+            if (users[i] != null) {  
+                ans += "\n" + users[i].toString();  
             }
         }
         return ans;
