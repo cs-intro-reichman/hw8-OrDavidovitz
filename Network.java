@@ -30,10 +30,10 @@ public class Network {
      *  Notice that the method receives a String, and returns a User object. */
     public User getUser(String name) {
         if (name == null) {
-            return null;  // Return null if the input name is null
+            return null;  
         }
         for (int i = 0; i < userCount; i++) {
-            if (users[i] != null && users[i].getName().equalsIgnoreCase(name)) {  // Case-insensitive comparison
+            if (users[i] != null && users[i].getName().equalsIgnoreCase(name)) {  
                 return users[i];
             }
         }
@@ -69,10 +69,10 @@ public class Network {
         User user2 = getUser(name2);  // Find the followee in the network
     
         if (user1 == null || user2 == null || name1==name2) {
-            return false;  // Return false if either user doesn't exist
+            return false;  
         }
     
-        return user1.addFollowee(name2);  // Add followee to user1
+        return user1.addFollowee(name2);  
     }
     
     
@@ -103,14 +103,14 @@ public class Network {
             if (users[i] != null) {  
                 int followsCount = 0;
     
-                // Count how many users follow this user
+            
                 for (int j = 0; j < users.length; j++) {
                     if (users[j] != null && users[j].follows(users[i].getName())) {
                         followsCount++;
                     }
                 }
     
-                // Update most popular user if this user has more followers
+           
                 if (followsCount > maxFollows) {
                     maxFollows = followsCount;
                     mostPopular = users[i].getName();
@@ -127,15 +127,15 @@ public class Network {
     /** Returns the number of times that the given name appears in the follows lists of all
      *  the users in this network. Note: A name can appear 0 or 1 times in each list. */
     private int followeeCount(String name) {
-        int counter = 0;
+        int counter1 = 0;
         for (int i=0; i<users.length;i++)
         {
             if(users[i].follows(name))
             {
-                counter++;
+                counter1++;
             }
         }
-        return counter;
+        return counter1;
     }
 
     // Returns a textual description of all the users in this network, and who they follow.
