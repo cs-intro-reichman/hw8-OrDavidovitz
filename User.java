@@ -123,12 +123,26 @@ import java.util.Set;
     /** Checks is this user is a friend of the other user.
      *  (if two users follow each other, they are said to be "friends.") */
     public boolean isFriendOf(User other) {
+        boolean thisFollowsOther = false;
+        boolean otherFollowsThis = false;
+    
+        // Check if the current user follows 'other'
         for (int i = 0; i < this.fCount; i++) {
             if (this.follows[i] != null && this.follows[i].equals(other.name)) {
-                return true; // Found a match, so 'this' follows 'other'
+                thisFollowsOther = true;
+                break;
             }
         }
-        return false; // No match found
+    
+        // Check if 'other' follows the current user
+        for (int i = 0; i < other.fCount; i++) {
+            if (other.follows[i] != null && other.follows[i].equals(this.name)) {
+                otherFollowsThis = true;
+                break;
+            }
+        }
+    
+        return thisFollowsOther && otherFollowsThis;  // Both must be true for friendship
     }
     
     /** Returns this user's name, and the names that s/he follows. */
