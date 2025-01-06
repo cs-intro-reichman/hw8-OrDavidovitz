@@ -1,3 +1,6 @@
+import java.util.HashSet;
+import java.util.Set;
+
 /** Represents a user in a social network. A user is characterized by a name,
  *  a list of user names that s/he follows, and the list's size. */
  public class User {
@@ -43,30 +46,41 @@
 
     /** If this user follows the given name, returns true; otherwise returns false. */
     public boolean follows(String name) {
-        for (int i = 0; i<this.fCount-1;i++)
-        {
-            if (this.follows[i]==name)
-            {return true;}
+        if (name == null || name.isEmpty()) {
+            return false; // Handle null or empty input
+        }
+        
+        // Capitalize the name: first letter uppercase, rest lowercase
+        name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+    
+        for (int i = 0; i < this.fCount; i++) {  
+            if (this.follows[i].equals(name)) {  
+                return true;
+            }
         }
         return false;
     }
+    
     /** Makes this user follow the given name. If successful, returns true. 
      *  If this user already follows the given name, or if the follows list is full, does nothing and returns false; */
     public boolean addFollowee(String name) {
-        if (fCount==follows.length)
-        return false;
-        for (int i=0;i<fCount;i++)
-        {
-            if (follows[i].equals(name))
-            {
-                System.out.println("You are already follows " + name);
+        if (name == null || name.isEmpty()) 
+            return false;
+        if (fCount == follows.length)  
+            return false;
+    
+        for (int i = 0; i < fCount; i++) {
+            if (follows[i].equalsIgnoreCase(name)) {  
                 return false;
             }
         }
-        this.follows[fCount] = name;
+    
+        follows[fCount] = name;  // Adds the new followee
         fCount++;
         return true;
     }
+    
+    
 
         /** 
      * Removes the given name from the follows list of this user. If successful, returns true.
@@ -75,45 +89,48 @@
     public boolean removeFollowee(String name) {
         for (int i = 0; i < fCount; i++) {
             if (this.follows[i].equals(name)) {
+                // Shift elements left to fill the gap
                 for (int j = i; j < fCount - 1; j++) {
                     this.follows[j] = this.follows[j + 1];
                 }
-                this.follows[fCount - 1] = null;
-                fCount--;  
+                this.follows[fCount - 1] = null; // Nullify the last element
+                fCount--;  // Decrement the count of followees
                 return true;
             }
         }
-        return false;
+        return false;  // Return false if the name was not found
     }
+    
 
 
     /** Counts the number of users that both this user and the other user follow.
     /*  Notice: This is the size of the intersection of the two follows lists. */
-    public int countMutual(User other) {
-          int count = 0;
-         for (int i=0;i<this.fCount;i++)
-         {
-            for (int j=0;j<other.fCount;j++)
-            {
-                if (this.follows[i]==other.follows[j])
-                count++;
-            }
-         }
-        return count;
+   public int countMutual(User other) {
+    Set<String> thisFollowsSet = new HashSet<>();
+    for (int i = 0; i < this.fCount; i++) {
+        thisFollowsSet.add(this.follows[i]);
     }
+
+    int count = 0;
+    for (int j = 0; j < other.fCount; j++) {
+        if (thisFollowsSet.contains(other.follows[j])) {
+            count++;
+        }
+    }
+    return count;
+}
 
     /** Checks is this user is a friend of the other user.
      *  (if two users follow each other, they are said to be "friends.") */
     public boolean isFriendOf(User other) {
-        for (int i=0;i<this.fCount;i++)
-        {
-            if (this.follows[i]==other.name)
-            {
-                return true;
+        for (int i = 0; i < this.fCount; i++) {
+            if (this.follows[i] != null && this.follows[i].equals(other.name)) {
+                return true; // Found a match, so 'this' follows 'other'
             }
         }
-        return false;
+        return false; // No match found
     }
+    
     /** Returns this user's name, and the names that s/he follows. */
     public String toString() {
         String ans = name + " -> ";
